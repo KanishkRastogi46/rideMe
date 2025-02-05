@@ -55,7 +55,7 @@ const captainSchema: Schema<Captains> = new Schema<Captains>({
 }, { 
     timestamps: true,
     methods: {
-        checkPassword: async function(this, password: string): Promise<boolean>{
+        checkPassword: async function(password: string): Promise<boolean>{
             try {
                 let isPasswordCorrect = await compare(password, this.password);
                 return isPasswordCorrect;
@@ -64,11 +64,11 @@ const captainSchema: Schema<Captains> = new Schema<Captains>({
                 throw err;
             }
         },
-        generateAccessToken: function(this): string {
+        generateAccessToken: function(): string {
             let accessToken = sign({id: this._id, email: this.email}, String(process.env.JWT_SECRET), {expiresIn: "24h"});
             return accessToken;
         },
-        generateRefreshToken: function(this): string {
+        generateRefreshToken: function(): string {
             let refreshToken = sign({id: this._id}, String(process.env.JWT_SECRET), {expiresIn: "7d"});
             return refreshToken;
         },

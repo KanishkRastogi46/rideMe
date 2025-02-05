@@ -6,6 +6,7 @@ import cors from "cors";
 import cookieParser = require("cookie-parser");
 import connectDB from "./src/lib/dbConnect";
 import userRouter from "./src/routes/user.route"
+import captainRouter from "./src/routes/captain.route";
 
 // configuring environment variables
 config();
@@ -23,7 +24,8 @@ app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())
 
 // user api routes
-app.use("/user", userRouter);
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/captain", captainRouter);
 
 // api routes
 app.get("", (req: Request, res: Response)=>{
