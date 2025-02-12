@@ -16,8 +16,18 @@ router.post("/login", [
     body("password").isLength({min: 6}).withMessage("Password should be minimum 6 characters")
 ], login);
 
-router.get("/profile", protectedRoute, profile);
+router.get("/profile", [
+    body("email").isEmail().withMessage("Invalid Email"),
+    protectedRoute, 
+],
+    profile
+);
 
-router.get("/logout", protectedRoute, logout);
+router.get("/logout", [
+    body("email").isEmail().withMessage("Invalid Email"),
+    protectedRoute, 
+], 
+    logout
+);
 
 export default router;

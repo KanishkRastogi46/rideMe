@@ -27,14 +27,16 @@ export const register = expressAsyncHandler(async (req: Request, res: Response, 
             password: hashedPassword
         });
         let refreshToken = sign({_id: newUser._id}, String(process.env.JWT_SECRET), {expiresIn: '7d'});
-        newUser.refreshToken = refreshToken;
-        await newUser.save();
+        
         let getUser = await usersModel.findById({_id: newUser._id}).select("-password");
         return res.status(201).cookie('refreshtoken', refreshToken, {
             httpOnly: true,
-            secure: true
+            secure: process.env.NODE_ENV === 'production',
+            domain: "localhost",
+            sameSite: "none"
         }).json({
             message: "User created successfully",
+            refreshToken,
             user: getUser,
         });
     } catch (err: any) {
@@ -48,22 +50,22 @@ export const login = expressAsyncHandler(async (req: Request, res: Response, nex
     let errors = validationResult(req);
     if (!errors.isEmpty()) return res.json({error: errors.array(), success: false});
 
-    
+    const {email , password} = req.body;
     try {
-        const {email , password} = req.body;
         let findUser = await usersModel.findOne({email});
         if (!findUser) return res.json({message: "Invalid credentials", success: false});
         let isPasswordCorrect = await compare(password, findUser.password);
         if (!isPasswordCorrect) return res.json({message: "Invalid credentials", success: false});
-        let token = req.cookies.refreshtoken
-        if (findUser.refreshToken == token) {
+        let token = req.cookies.refreshtoken || req.headers.authorization?.split(" ")[1];
+        if (token) {
             let accessToken = sign({_id: findUser._id, email: findUser.email}, String(process.env.JWT_SECRET), {expiresIn: '24h'})
-            findUser.accessToken = accessToken;
-            await findUser.save();
+
             let getUser = await usersModel.findById({_id: findUser._id}).select("-password");
-            res.status(201).cookie('accesstoken', accessToken, {
+            res.status(200).cookie('accesstoken', accessToken, {
                 httpOnly: true, 
-                secure: true
+                secure: process.env.NODE_ENV === 'production',
+                domain: "localhost",
+                sameSite: "none"
             }).json({
                 message: "Login successfull",
                 user: getUser,
@@ -77,12 +79,16 @@ export const login = expressAsyncHandler(async (req: Request, res: Response, nex
             findUser.accessToken = accessToken;
             await findUser.save();
             let getUser = await usersModel.findById({_id: findUser._id}).select("-password");
-            res.status(201).cookie('refreshtoken', refreshToken, {
+            res.status(200).cookie('refreshtoken', refreshToken, {
                 httpOnly: true,
-                secure: true
+                secure: process.env.NODE_ENV === 'production',
+                domain: "localhost",
+                sameSite: "none"
             }).cookie('accesstoken', accessToken, {
                 httpOnly: true, 
-                secure: true
+                secure: process.env.NODE_ENV === 'production',
+                domain: "localhost",
+                sameSite: "none"
             }).json({
                 message: "Login successfull",
                 user: getUser,

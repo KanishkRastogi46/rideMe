@@ -3,7 +3,7 @@ import express, { Express , Request , Response } from "express";
 import { createServer } from "http";
 import logger from "morgan";
 import cors from "cors";
-import cookieParser = require("cookie-parser");
+import cookieParser from "cookie-parser";
 import connectDB from "./src/lib/dbConnect";
 import userRouter from "./src/routes/user.route"
 import captainRouter from "./src/routes/captain.route";
@@ -18,7 +18,12 @@ const port: number = Number(process.env.PORT)
 
 // built-in middlewares
 app.use(logger("dev"))
-app.use(cors())
+app.use(cors({
+    origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"]
+}))
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())
