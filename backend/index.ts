@@ -40,8 +40,8 @@ app.get("", (req: Request, res: Response)=>{
     })
 })
 
-const startServer = function() {
-    connectDB();
+const startServer = async function() {
+    await connectDB();
     server.listen(port , ()=>{
         console.log(`Server listening on port ${port}`)
     })
