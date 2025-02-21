@@ -20,9 +20,7 @@ const port: number = Number(process.env.PORT)
 app.use(logger("dev"))
 app.use(cors({
     origin: process.env.CLIENT_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"]
 }))
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))

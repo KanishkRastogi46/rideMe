@@ -3,7 +3,6 @@ import mongoose , { Document , Schema } from "mongoose";
 interface Users extends Document{
     fullname: {
         firstName: string,
-        middleName?: string,
         lastName?: string
     },
     email: string,
@@ -19,7 +18,6 @@ interface Users extends Document{
 const userSchema: Schema<Users> = new Schema<Users>({
     fullname: {
         firstName: { type: String, required: true },
-        middleName: String,
         lastName: String
     },
     email: { type: String, required: true, unique: true },
@@ -35,6 +33,6 @@ const userSchema: Schema<Users> = new Schema<Users>({
 });
 
 
-const usersModel = mongoose.models.users || mongoose.model<Users>("users", userSchema);
+const usersModel = mongoose.models.users<Users> || mongoose.model<Users>("users", userSchema);
 
 export default usersModel;

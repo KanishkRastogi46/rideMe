@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import image from '../assets/logo.png'
+import apiInstance from '../api/apiInstance'
 
 export default function UserSignup() {
   const [firstName, setFirstName] = useState('')
@@ -12,17 +13,22 @@ export default function UserSignup() {
   const navigate = useNavigate()
 
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     // Basic validation example
     if (password !== confirmPassword) {
       console.error('Passwords do not match')
       return
     }
-    // Add further signup logic here.
-    console.log('First Name:', firstName, 'Last Name:', lastName, 'Email:', email, 'Password:', password)
-    // On success, navigate to dashboard or home
-    navigate('/dashboard')
+    try {
+      const response = await apiInstance.post("/user/register", {fullname: {firstName, lastName}, email, password})
+      if (response.status === 200) {
+        console.log('User created successfully')
+        navigate('/users/signin')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+    }
   }
 
   return (
