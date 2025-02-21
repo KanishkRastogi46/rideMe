@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import image from '../assets/logo.png'
+import apiInstance from '../api/apiInstance'
 
 export default function CaptainSignup() {
   const [firstName, setFirstName] = useState('')
@@ -17,24 +18,21 @@ export default function CaptainSignup() {
 
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (password !== confirmPassword) {
       console.error('Passwords do not match')
       return
     }
-    // Add your signup logic here.
-    console.log('First Name:', firstName)
-    console.log('Last Name:', lastName)
-    console.log('Email:', email)
-    console.log('Password:', password)
-    console.log('License:', license)
-    console.log('Vehicle Type:', vehicleType)
-    console.log('Vehicle Plate:', vehiclePlate)
-    console.log('Capacity:', vehicleCapacity)
-    console.log('Vehicle Color:', vehicleColor)
-    // On success, navigate to the captain dashboard or home
-    navigate('/captain/dashboard')
+
+    try {
+      const response = await apiInstance.post('/captains/register', {fullname: {firstName, lastName}, email, password, license, vehicle: {type: vehicleType, plate: vehiclePlate, capacity: vehicleCapacity, color: vehicleColor}})
+      if (response.status === 201) {
+        navigate('/captains/signin')
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -55,7 +53,7 @@ export default function CaptainSignup() {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div>
@@ -69,7 +67,7 @@ export default function CaptainSignup() {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
           </div>
@@ -84,7 +82,7 @@ export default function CaptainSignup() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
           <div className="mb-4 grid grid-cols-2 gap-4">
@@ -99,7 +97,7 @@ export default function CaptainSignup() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div>
@@ -113,7 +111,7 @@ export default function CaptainSignup() {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
           </div>
@@ -140,7 +138,7 @@ export default function CaptainSignup() {
               value={license}
               onChange={(e) => setLicense(e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
           <div className="mb-4">
@@ -151,7 +149,7 @@ export default function CaptainSignup() {
               id="vehicleType"
               value={vehicleType}
               onChange={(e) => setVehicleType(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             >
               <option value="Car">Car</option>
               <option value="Bike">Bike</option>
@@ -171,7 +169,7 @@ export default function CaptainSignup() {
                 value={vehiclePlate}
                 onChange={(e) => setVehiclePlate(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
             <div>
@@ -185,7 +183,7 @@ export default function CaptainSignup() {
                 value={vehicleCapacity}
                 onChange={(e) => setVehicleCapacity(e.target.value)}
                 required
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               />
             </div>
           </div>
@@ -200,7 +198,7 @@ export default function CaptainSignup() {
               value={vehicleColor}
               onChange={(e) => setVehicleColor(e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
           <div className="flex items-center justify-between">

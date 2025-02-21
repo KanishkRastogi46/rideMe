@@ -11,7 +11,6 @@ export const register = expressAsyncHandler(async (req: Request, res: Response, 
     if (!errors.isEmpty()) return res.json({error: errors.array(), success: false});
     console.log(req.body);
     const {fullname, email, password} = req.body;
-    const {firstName, lastName} = fullname;
 
     try {
         const findUser = await usersModel.findOne({email});
@@ -19,10 +18,7 @@ export const register = expressAsyncHandler(async (req: Request, res: Response, 
         
         const hashedPassword = await hash(password , 10);
         const newUser = await usersModel.create({
-            fullname: {
-                firstName,
-                lastName
-            },
+            fullname,
             email,
             password: hashedPassword
         });

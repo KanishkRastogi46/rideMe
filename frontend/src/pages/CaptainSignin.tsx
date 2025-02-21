@@ -1,19 +1,29 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router'
 import image from '../assets/logo.png'
+import apiInstance from '../api/apiInstance'
+import captainStore from '../store/captain.store'
 
 export default function CaptainSignin() {
+  const setCaptain = captainStore((state)=>state.setCaptain)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Add your authentication logic here.
-    console.log('Captain Email:', email, 'Password:', password)
-    // On success, navigate to the captain dashboard or home
-    navigate('/captain/dashboard')
+    
+    try {
+      const response = await apiInstance.post('/captain/login', { email, password })
+      if (response.status === 200) {
+        setCaptain(response.data.email, response.data.fullname.firstName + response.data.fullname.lastName, response.data.profile)
+        navigate('/captains/dashboard')
+      }
+    } catch (error) {
+      console.error(error)
+    }
+    
   }
 
   return (
@@ -29,11 +39,11 @@ export default function CaptainSignin() {
             <input
               type="email"
               id="email"
-              placeholder="Enter your email"
+              placeholder="email@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
           <div className="mb-6">
@@ -47,7 +57,7 @@ export default function CaptainSignin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             />
             <div className="flex items-center">
               <input

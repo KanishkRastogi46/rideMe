@@ -18,15 +18,15 @@ const userStore = create<User>() (devtools((set)=>{
             profile: ''
         },
         
-        setUser: (email: string, name: string, profile: string | null) => set((state)=>{
-            return {
+        setUser: (email: string, name: string, profile: string | null) => set(
+            {
                 user: {
                     email: email,
                     name: name,
                     profile: profile || ''
                 }
             }
-        }),
+        ),
     }
 }))
 

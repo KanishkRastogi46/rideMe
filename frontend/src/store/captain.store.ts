@@ -18,15 +18,15 @@ const captainStore = create<Captain>() (devtools((set)=>{
             profile: ''
         },
         
-        setCaptain: (email: string, name: string, profile: string | null) => set((state)=>{
-            return {
+        setCaptain: (email: string, name: string, profile: string | null) => set(
+            {
                 captain: {
                     email: email,
                     name: name,
                     profile: profile || ''
                 }
             }
-        }),
+        ),
     }
 }))
 

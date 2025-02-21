@@ -18,8 +18,8 @@ interface Captains extends Document{
     available: boolean,
     vehicle: {
         color: string,
-        plateno: string,
-        vehicleType: string,
+        plate: string,
+        type: string,
         capacity: number
     }
 }
@@ -42,8 +42,8 @@ const captainSchema: Schema<Captains> = new Schema<Captains>({
     available: { type: Boolean, default: true },
     vehicle: {
         color: { type: String, required: true },
-        plateno: { type: String, required: true, unique: true },
-        vehicleType: { type: String, enum: ['Car', 'Two-wheeler', 'Auto'], required: true },
+        plate: { type: String, required: true, unique: true },
+        type: { type: String, enum: ['Car', 'Two-wheeler', 'Auto'], required: true },
         capacity: { type: Number, required: true }
     }
 }, { 

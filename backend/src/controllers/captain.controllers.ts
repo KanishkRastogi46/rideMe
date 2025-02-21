@@ -7,13 +7,12 @@ import { sign, verify } from "jsonwebtoken";
 
 
 const register = expressAsyncHandler(async function (req: Request, res: Response): Promise<any> {
-    let result = validationResult(req);
-    if (result.isEmpty()) res.json({error: result.array(), success: false});
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) res.json({error: errors.array(), success: false});
 
     try {
         console.log(req.body);
-        let {fullname, email, password} = req.body;
-        let {firstName, middleName, lastName} = fullname;
+        let {fullname, email, password, license, vehicle} = req.body;
 
         let captainExists = await captainModel.findOne({email});
         if (captainExists) {
@@ -21,13 +20,11 @@ const register = expressAsyncHandler(async function (req: Request, res: Response
         } else {
             let hashedPassword = await hash(password, 10);
             let newCaptain = new captainModel({
-                fullname: {
-                    firstName,
-                    middleName,
-                    lastName
-                },
+                fullname,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                license,
+                vehicle
             });
             await newCaptain.save();
 

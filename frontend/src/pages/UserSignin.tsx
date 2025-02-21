@@ -1,19 +1,29 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import image from '../assets/logo.png'
+import apiInstance from '../api/apiInstance'
+import userStore from '../store/users.store'
 
 export default function UserSignin() {
+  const setUser = userStore((state)=> state.setUser);
+
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Add your authentication logic here.
-    console.log('Email:', email, 'Password:', password)
-    // On success, navigate to dashboard or home
-    navigate('/dashboard')
+    
+    try {
+      let response = await apiInstance.post('/user/login', { email, password })
+      if (response.status === 200) {
+        setUser(response.data.email, response.data.fullname.firstName + response.data.fullname.lastName, response.data.profile)
+        navigate('/users/dashboard')
+      }
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
@@ -32,11 +42,11 @@ export default function UserSignin() {
             <input
               type="email"
               id="email"
-              placeholder="Enter your email"
+              placeholder="email@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
           </div>
           <div className="mb-6">
@@ -53,7 +63,7 @@ export default function UserSignin() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
+              className="shadow appearance-none text-base placeholder:text-sm border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
             />
             <div className="flex items-center">
               <input
