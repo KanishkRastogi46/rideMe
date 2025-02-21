@@ -6,7 +6,7 @@ This application provides APIs for both users and captains.
 
 ### User Model
 The User model is defined in [`backend/src/models/users.model.ts`](backend/src/models/users.model.ts) and contains the following properties:
-- **fullname**: An object with `firstName` (required), `middleName`, and `lastName`.
+- **fullname**: An object with `firstName` (required), and `lastName`.
 - **email**: A unique and required string.
 - **password**: A required hashed string.
 - **profile**: A string representing profile picture URL or similar.
@@ -17,7 +17,7 @@ The User model is defined in [`backend/src/models/users.model.ts`](backend/src/m
 
 ### Captain Model
 The Captain model is defined in [`backend/src/models/captain.model.ts`](backend/src/models/captain.model.ts) and contains the following properties:
-- **fullname**: An object with `firstName` (required), `middleName`, and `lastName`.
+- **fullname**: An object with `firstName` (required), and `lastName`.
 - **email**: A unique and required string.
 - **password**: A required hashed string.
 - **profile**: A string for the profile information.
@@ -87,10 +87,10 @@ Defined in [`backend/src/routes/captain.route.ts`](backend/src/routes/captain.ro
     "password": "strongpassword",
     "license": "LICENSE123",
     "vehicle": {
-        "color": "Red",
-        "plateno": "ABC-123",
-        "vehicleType": "Car",
-        "capacity": 4
+        "type": "Car",
+        "plate": "UP-32-1234",
+        "capacity": 4,
+        "color": "Red"
     }
   }
   ```  
