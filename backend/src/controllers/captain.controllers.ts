@@ -35,9 +35,9 @@ const register = expressAsyncHandler(async function (req: Request, res: Response
                    .status(201)
                    .cookie("refreshToken", refreshToken, {
                        httpOnly: true,
-                       sameSite: "none",
-                       secure: process.env.NODE_ENV === "production",
                        domain: "localhost",
+                       secure: process.env.NODE_ENV === "production",
+                       sameSite: (process.env.NODE_ENV === 'production') ? "none" : true
                     })
                    .json(new ApiResponse(getCaptain, "Captain created successfully", true, 201));
         } 
@@ -67,9 +67,9 @@ const login = expressAsyncHandler(async function (req: Request, res: Response): 
                    .status(200)
                    .cookie("accesstoken", accesstoken, {
                        httpOnly: true,
-                       sameSite: "none",
-                       secure: process.env.NODE_ENV === "production",
                        domain: "localhost",
+                       sameSite: (process.env.NODE_ENV === 'production') ? "none" : true,
+                       secure: process.env.NODE_ENV === "production",
                     })
                    .json(new ApiResponse(captain, "Captain logged in successfully", true, 200));
         } else {
@@ -80,15 +80,15 @@ const login = expressAsyncHandler(async function (req: Request, res: Response): 
                    .status(200)
                    .cookie("refreshToken", newRefreshToken, {
                        httpOnly: true,
-                       sameSite: "none",
-                       secure: process.env.NODE_ENV === "production",
                        domain: "localhost",
+                sameSite: (process.env.NODE_ENV === 'production') ? "none" : true,
+                       secure: process.env.NODE_ENV === "production"
                     })
                    .cookie("accesstoken", accesstoken, {
                        httpOnly: true,
-                       sameSite: "none",
-                       secure: process.env.NODE_ENV === "production",
                        domain: "localhost",
+                       sameSite: (process.env.NODE_ENV === 'production') ? "none" : true,
+                       secure: process.env.NODE_ENV === "production"
                     })
                    .json(new ApiResponse(captain, "Captain logged in successfully", true, 200));
         }

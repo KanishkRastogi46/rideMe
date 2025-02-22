@@ -18,7 +18,7 @@ export default function UserSignin() {
     try {
       let response = await apiInstance.post('/user/login', { email, password })
       if (response.status === 200) {
-        setUser(response.data.data.email, response.data.data.fullname.firstName + response.data.data.fullname.lastName, response.data.data.profile)
+        setUser(response.data.data.email, response.data.data.fullname.firstName + " " + response.data.data.fullname.lastName, response.data.data.profile)
         navigate('/users')
       }
     } catch (error) {

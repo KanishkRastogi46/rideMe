@@ -31,7 +31,7 @@ export const register = expressAsyncHandler(async (req: Request, res: Response, 
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             domain: "localhost",
-            sameSite: "none"
+            sameSite: (process.env.NODE_ENV === 'production') ? "none" : true
         }).json(new ApiResponse(getUser, "User created successfully", true, 201));
     } catch (err: any) {
         console.log(err);
@@ -61,7 +61,7 @@ export const login = expressAsyncHandler(async (req: Request, res: Response, nex
                 httpOnly: true, 
                 secure: process.env.NODE_ENV === 'production',
                 domain: "localhost",
-                sameSite: "none"
+            sameSite: (process.env.NODE_ENV === 'production') ? "none" : true
             }).json(new ApiResponse(getUser, "User logged in successfully", true, 200))
         } else {
             let refreshToken = sign({_id: findUser._id}, String(process.env.JWT_SECRET), {expiresIn: '7d'});
@@ -72,12 +72,12 @@ export const login = expressAsyncHandler(async (req: Request, res: Response, nex
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 domain: "localhost",
-                sameSite: "none"
+            sameSite: (process.env.NODE_ENV === 'production') ? "none" : true
             }).cookie('accesstoken', accessToken, {
                 httpOnly: true, 
                 secure: process.env.NODE_ENV === 'production',
                 domain: "localhost",
-                sameSite: "none"
+                sameSite: (process.env.NODE_ENV === 'production') ? "none" : true
             }).json(new ApiResponse(getUser, "User logged in successfully", true, 200));
         }
     } catch (err: any) {
