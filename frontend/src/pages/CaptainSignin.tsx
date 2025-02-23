@@ -18,7 +18,7 @@ export default function CaptainSignin() {
       const response = await apiInstance.post('/captain/login', { email, password })
       if (response.status === 200) {
         setCaptain(response.data.data.email, response.data.data.fullname.firstName + response.data.data.fullname.lastName, response.data.data.profile)
-        navigate('/captains/dashboard')
+        navigate('/captains')
       }
     } catch (error) {
       console.error(error)

@@ -11,6 +11,7 @@ export default async function protectedRoute(req: Request, res: Response, next: 
         
         let user : any = verify(token , String(process.env.JWT_SECRET));
         let getUser = await usersModel.findById({_id: user._id}).select("_id email");
+        if (!getUser) return res.status(300).json(new ApiResponse(undefined, "User not found", false, 404));
         req.body.user = {_id: getUser?._id, email: getUser?.email};
         next();
     } catch (error: Error | any) {

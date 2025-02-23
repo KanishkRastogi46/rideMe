@@ -8,33 +8,26 @@ const router = Router();
 
 
 router.post("/register",[
-    body("fullname.firstName").isLength({min: 3}).withMessage("First name should be minimum 3 character"),
-    body("email").isEmail().withMessage("Invalid Email"),
-    body("password").isLength({min: 6}).withMessage("Password should be minimum 6 characters"),
-    body("vehicle.plate").isAlphanumeric().isLength({min: 8, max: 8}).withMessage("Invalid Vehicle Plate"),
-    body("vehicle.capacity").isNumeric().withMessage("Invalid Vehicle Capacity"),
-    body("vehicle.color").isLength({min: 3}).withMessage("Invalid Vehicle Color"),
+    body("fullname.firstName").trim().isLength({min: 3}).withMessage("First name should be minimum 3 character"),
+    body("email").trim().isEmail().withMessage("Invalid Email"),
+    body("password").trim().isLength({min: 6}).withMessage("Password should be minimum 6 characters"),
+    body("license").isAlphanumeric().isLength({min: 10, max: 10}).withMessage("Invalid License"),
+    body("vehicle.plate").trim().isAlphanumeric().isLength({min: 10, max: 10}).withMessage("Invalid Vehicle Plate"),
+    body("vehicle.capacity").isNumeric().if((val: number) => (val <= 1 && val >= 9)).withMessage("Invalid Vehicle Capacity"),
+    body("vehicle.color").trim().isLength({min: 3}).withMessage("Invalid Vehicle Color"),
 ],
     register
 )
+
 router.post("/login", [
-    body("email").isEmail().withMessage("Invalid Email"),
-    body("password").isLength({min: 6}).withMessage("Password should be minimum 6 characters"),
+    body("email").trim().isEmail().withMessage("Invalid Email"),
+    body("password").trim().isLength({min: 6}).withMessage("Password should be minimum 6 characters"),
 ],
     login
 )
-router.post("/profile", [
-    body("email").isEmail().withMessage("Invalid Email"),
-    captainAuthMiddleware,
-],
-    profile
-)
-router.post("/profile", [
-    body("email").isEmail().withMessage("Invalid Email"),
-    captainAuthMiddleware,
-],
-    logout
-)
+router.get("/profile", captainAuthMiddleware, profile)
+
+router.get("/logout", captainAuthMiddleware, logout)
 
 
 export default router;

@@ -33,7 +33,7 @@ const register = expressAsyncHandler(async function (req: Request, res: Response
             const getCaptain = await captainModel.findOne({email}).select("-password");
             return res
                    .status(201)
-                   .cookie("refreshToken", refreshToken, {
+                   .cookie("captainToken", refreshToken, {
                        httpOnly: true,
                        domain: "localhost",
                        secure: process.env.NODE_ENV === "production",
@@ -59,7 +59,7 @@ const login = expressAsyncHandler(async function (req: Request, res: Response): 
         let isMatch = await compare(password, captain.password);
         if (!isMatch) return res.json(new ApiResponse(undefined, "Captain not found", false, 404));
 
-        let token = req.cookies.refreshToken || req.headers.authorization?.split(" ")[1];
+        let token = req.cookies.captainToken || req.headers.authorization?.split(" ")[1];
         let refreshToken = verify(token, String(process.env.JWT_SECRET));
         if (refreshToken) {
             let accesstoken = sign({_id: captain._id, email: captain.email}, String(process.env.JWT_SECRET), {expiresIn: "24h"});
@@ -78,7 +78,7 @@ const login = expressAsyncHandler(async function (req: Request, res: Response): 
 
             return res
                    .status(200)
-                   .cookie("refreshToken", newRefreshToken, {
+                   .cookie("captainToken", newRefreshToken, {
                        httpOnly: true,
                        domain: "localhost",
                 sameSite: (process.env.NODE_ENV === 'production') ? "none" : true,
@@ -99,9 +99,6 @@ const login = expressAsyncHandler(async function (req: Request, res: Response): 
 })
 
 const profile = expressAsyncHandler(async function (req: Request, res: Response): Promise<any> {
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) res.json(new ApiError(String(errors.array()), 400));
-
     let {email} = req.body.captain;
     if (!email) return res.json(new ApiResponse(undefined, "Email is required", false, 400));
     let captain = await captainModel.findOne({email});
@@ -109,9 +106,6 @@ const profile = expressAsyncHandler(async function (req: Request, res: Response)
 })
 
 const logout = expressAsyncHandler(async function (req: Request, res: Response): Promise<any> {
-    let errors = validationResult(req);
-    if (!errors.isEmpty()) res.json(new ApiError(String(errors.array()), 400));
-
     let {email} = req.body.captain;
     if (!email) return res.json(new ApiResponse(undefined, "Email is required", false, 400));
     return res.clearCookie("accesstoken").status(200).json(new ApiResponse(undefined, "Captain profile retrieved successfully", true, 200));

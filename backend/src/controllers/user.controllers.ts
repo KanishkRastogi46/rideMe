@@ -27,7 +27,7 @@ export const register = expressAsyncHandler(async (req: Request, res: Response, 
         let refreshToken = sign({_id: newUser._id}, String(process.env.JWT_SECRET), {expiresIn: '7d'});
         
         let getUser = await usersModel.findById({_id: newUser._id}).select("-password");
-        return res.status(201).cookie('refreshtoken', refreshToken, {
+        return res.status(201).cookie('usertoken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             domain: "localhost",
@@ -52,7 +52,7 @@ export const login = expressAsyncHandler(async (req: Request, res: Response, nex
         let isPasswordCorrect = await compare(password, findUser.password);
         if (!isPasswordCorrect) return res.json(new ApiResponse(undefined, "User not found", false, 404));
 
-        let token = req.cookies.refreshtoken || req.headers.authorization?.split(" ")[1];
+        let token = req.cookies.usertoken || req.headers.authorization?.split(" ")[1];
         if (token) {
             let accessToken = sign({_id: findUser._id, email: findUser.email}, String(process.env.JWT_SECRET), {expiresIn: '24h'})
 
@@ -68,11 +68,11 @@ export const login = expressAsyncHandler(async (req: Request, res: Response, nex
             let accessToken = sign({_id: findUser._id, email: findUser.email}, String(process.env.JWT_SECRET), {expiresIn: '24h'});
             
             let getUser = await usersModel.findById({_id: findUser._id}).select("-password");
-            res.status(200).cookie('refreshtoken', refreshToken, {
+            res.status(200).cookie('usertoken', refreshToken, {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === 'production',
                 domain: "localhost",
-            sameSite: (process.env.NODE_ENV === 'production') ? "none" : true
+                sameSite: (process.env.NODE_ENV === 'production') ? "none" : true
             }).cookie('accesstoken', accessToken, {
                 httpOnly: true, 
                 secure: process.env.NODE_ENV === 'production',

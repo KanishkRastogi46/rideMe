@@ -7,7 +7,8 @@ import UserSignin from './pages/UserSignin.tsx'
 import UserSignup from './pages/UserSignup.tsx'
 import CaptainSignin from './pages/CaptainSignin.tsx'
 import CaptainSignup from './pages/CaptainSignup.tsx'
-import Home from './pages/Home.tsx'
+import Home from './pages/UserHome.tsx'
+import CaptainHome from './pages/CaptainHome.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
@@ -21,6 +22,7 @@ createRoot(document.getElementById('root')!).render(
             <Route path="signup" element={<UserSignup />} />
           </Route>
           <Route path="/captains">
+            <Route index element={<CaptainHome/>} />
             <Route path="signin" element={<CaptainSignin />} />
             <Route path="signup" element={<CaptainSignup />} />
           </Route>

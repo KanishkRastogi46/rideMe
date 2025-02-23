@@ -26,7 +26,7 @@ export default function CaptainSignup() {
     }
 
     try {
-      const response = await apiInstance.post('/captains/register', {fullname: {firstName, lastName}, email, password, license, vehicle: {type: vehicleType, plate: vehiclePlate, capacity: vehicleCapacity, color: vehicleColor}})
+      const response = await apiInstance.post('/captain/register', {fullname: {firstName, lastName}, email, password, license, vehicle: {type: vehicleType, plate: vehiclePlate, capacity: vehicleCapacity, color: vehicleColor}})
       if (response.status === 201) {
         navigate('/captains/signin')
       }
